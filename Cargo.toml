@@ -2,7 +2,21 @@
 name = "renvy"
 version = "0.1.0"
 edition = "2021"
+authors = ["Benjamin Sattler <bsattler.inbox@gmail.com>"]
+description = ".env file manager that merges defaults with custom settings"
+license = "MIT"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
+[lib]
+name = "renvy"
+path = "src/lib.rs"
+edition = "2021"
+
+[[bin]]
+name = "renvy"
+path = "src/bin/renvy.rs"
+edition = "2021"
+
 [dependencies]
+clap = { version = "3.2.5", features = ["derive"] }
