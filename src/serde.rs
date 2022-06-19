@@ -18,7 +18,9 @@ pub fn deserialize(input: String) -> Settings {
         .filter(|line| !line.is_empty())
         .for_each(|line| {
             let mut splits = line.split("=").collect::<Vec<&str>>();
-            result.insert(splits.remove(0).into(), Some(String::from(splits.join("="))));
+            let key: String = splits.remove(0).into();
+            let value: Option<String> = if splits.is_empty() || splits.join("=") == "" { None } else { Some(splits.join("=").into()) };
+            result.insert(key, value);
         });
 
     result
@@ -135,5 +137,26 @@ use crate::{merge, serde};
 
     assert!(actual.contains_key("domain"));
     assert_eq!(actual.get("domain").unwrap(), &Some("this value has spaces".into()));
+  }
+
+  #[test]
+  fn test_seralization_empty_value() {
+    let settings = merge::Settings::from([
+      ("domain".into(), None),
+    ]);
+
+    let expected = String::from("domain=\n");
+
+    assert_eq!(serde::serialize(settings), expected);
+  }
+
+  #[test]
+  fn test_deseralization_empty_value() {
+    let input = String::from("domain=\n");
+
+    let actual = serde::deserialize(input);
+
+    assert!(actual.contains_key("domain"));
+    assert_eq!(actual.get("domain").unwrap(), &None);
   }
 }
