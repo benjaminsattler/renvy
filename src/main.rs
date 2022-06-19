@@ -1,11 +1,13 @@
 use std::collections::HashMap;
 
 mod merge;
+mod io;
+mod serde;
 
 fn main() {
-    let settings = HashMap::from([("domain".into(), Some("https://benjaminsattler.net".into()))]);
+    let settings = merge::Settings::from([("domain".into(), Some("https://benjaminsattler.net".into()))]);
 
-    let defaults = HashMap::from([
+    let defaults = merge::Settings::from([
         ("domain".into(), Some("https://example.com".into())),
         ("port".into(), Some("433".into())),
     ]);

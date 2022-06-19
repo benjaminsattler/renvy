@@ -1,10 +1,11 @@
-use std::collections::HashMap;
+use std::collections::BTreeMap;
 
 pub type Key = String;
 pub type Value = Option<String>;
+pub type Settings = BTreeMap<Key, Value>;
 
-pub fn merge(settings: HashMap<Key, Value>, defaults: HashMap<Key, Value>, clean: Option<bool>) -> HashMap<Key, Value> {
-    let mut result: HashMap<Key, Value> = settings.clone();
+pub fn merge(settings: Settings, defaults: Settings, clean: Option<bool>) -> Settings {
+    let mut result: Settings = settings.clone();
     let clean = if let Some(x) = clean { x } else { false };
 
     if clean {
@@ -22,14 +23,13 @@ pub fn merge(settings: HashMap<Key, Value>, defaults: HashMap<Key, Value>, clean
 #[cfg(test)]
 mod test {
     use crate::merge;
-    use std::collections::HashMap;
 
     #[test]
     fn merge_adds_new_defaults() {
         let settings =
-            HashMap::from([("domain".into(), Some("https://benjaminsattler.net".into()))]);
+            merge::Settings::from([("domain".into(), Some("https://benjaminsattler.net".into()))]);
 
-        let defaults = HashMap::from([
+        let defaults = merge::Settings::from([
             ("port".into(), Some("433".into())),
         ]);
 
@@ -42,9 +42,9 @@ mod test {
     #[test]
     fn merge_keeps_existing_settings_with_defaults() {
         let settings =
-            HashMap::from([("domain".into(), Some("https://benjaminsattler.net".into()))]);
+            merge::Settings::from([("domain".into(), Some("https://benjaminsattler.net".into()))]);
 
-        let defaults = HashMap::from([
+        let defaults = merge::Settings::from([
             ("domain".into(), Some("https://example".into())),
         ]);
 
@@ -57,9 +57,9 @@ mod test {
     #[test]
     fn merge_keeps_settings_without_defaults_if_cleaning_is_default() {
         let settings =
-            HashMap::from([("domain".into(), Some("https://benjaminsattler.net".into()))]);
+        merge::Settings::from([("domain".into(), Some("https://benjaminsattler.net".into()))]);
 
-        let defaults = HashMap::from([
+        let defaults = merge::Settings::from([
             ("port".into(), Some("433".into())),
         ]);
 
@@ -72,9 +72,9 @@ mod test {
     #[test]
     fn merge_keeps_settings_without_defaults_if_not_cleaning() {
         let settings =
-            HashMap::from([("domain".into(), Some("https://benjaminsattler.net".into()))]);
+            merge::Settings::from([("domain".into(), Some("https://benjaminsattler.net".into()))]);
 
-        let defaults = HashMap::from([
+        let defaults = merge::Settings::from([
             ("port".into(), Some("433".into())),
         ]);
 
@@ -87,9 +87,9 @@ mod test {
     #[test]
     fn merge_discards_settings_without_defaults_if_cleaning() {
         let settings =
-            HashMap::from([("domain".into(), Some("https://benjaminsattler.net".into()))]);
+            merge::Settings::from([("domain".into(), Some("https://benjaminsattler.net".into()))]);
 
-        let defaults = HashMap::from([
+        let defaults = merge::Settings::from([
             ("port".into(), Some("433".into())),
         ]);
 
