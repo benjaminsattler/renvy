@@ -1,4 +1,3 @@
-use renvy;
 use clap::Parser;
 
 #[derive(Parser)]
@@ -29,6 +28,6 @@ fn main() {
     let merged = renvy::merge(settings, defaults, Some(matches.cleanup));
 
     let merged = renvy::serialize(merged);
-    
+
     renvy::write_file(&matches.settings, merged).unwrap()
 }
