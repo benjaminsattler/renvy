@@ -5,7 +5,7 @@ pub type Value = Option<String>;
 pub type Settings = BTreeMap<Key, Value>;
 
 pub fn merge(settings: Settings, defaults: Settings, clean: Option<bool>) -> Settings {
-    let mut result: Settings = settings.clone();
+    let mut result: Settings = settings;
     let clean = if let Some(x) = clean { x } else { false };
 
     if clean {

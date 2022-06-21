@@ -14,12 +14,12 @@ pub fn deserialize(input: String) -> Settings {
     let mut result = Settings::new();
 
     input
-        .split("\n")
+        .split('\n')
         .filter(|line| !line.is_empty())
         .for_each(|line| {
-            let mut splits = line.split("=").collect::<Vec<&str>>();
+            let mut splits = line.split('=').collect::<Vec<&str>>();
             let key: String = splits.remove(0).into();
-            let value: Option<String> = if splits.is_empty() || splits.join("=") == "" { None } else { Some(splits.join("=").into()) };
+            let value: Option<String> = if splits.is_empty() || splits.join("=") == "" { None } else { Some(splits.join("=")) };
             result.insert(key, value);
         });
 
