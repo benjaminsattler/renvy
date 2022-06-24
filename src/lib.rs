@@ -1,8 +1,8 @@
 mod io;
 mod merge;
-mod serde;
 pub mod prelude;
+mod serde;
 
 pub use io::{read_file, write_file};
-pub use merge::{Key, Value, Settings, merge};
+pub use merge::{merge, Key, Settings, Value};
 pub use serde::{deserialize, serialize};

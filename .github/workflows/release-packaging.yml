@@ -1,0 +1,99 @@
+on:
+  push:
+    branches:
+      - master
+
+name: Release Packaging
+
+jobs:
+  build-linux:
+    name: Release Packaging Linux
+    env:
+      PROJECT_NAME_UNDERSCORE: renvy
+      ARCH: x86_64-unknown-linux-gnu
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: stable
+          override: true
+          target: ${{ env.ARCH }}
+      - name: Release Build
+        run: cargo build --release --target=${{ env.ARCH }}
+      - name: 'Upload lib Artifact'
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{ env.PROJECT_NAME_UNDERSCORE }}-${{ env.ARCH }}
+          path: target/${{ env.ARCH }}/release/${{ env.PROJECT_NAME_UNDERSCORE }}
+      - name: 'Upload bin Artifact'
+        uses: actions/upload-artifact@v2
+        with:
+          name: lib${{ env.PROJECT_NAME_UNDERSCORE }}-${{ env.ARCH }}.rlib
+          path: target/${{ env.ARCH }}/release/lib${{ env.PROJECT_NAME_UNDERSCORE }}.rlib
+  
+  build-windows:
+    runs-on: windows-latest
+    name: Release Packaging Windows
+    env:
+      PROJECT_NAME_UNDERSCORE: renvy
+      ARCH: x86_64-pc-windows-msvc
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Install latest rust toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: stable
+          override: true
+          target: ${{ env.ARCH }}
+      - name: Build
+        run: cargo build --release --target=${{ env.ARCH }}
+      - name: 'Upload lib Artifact'
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{ env.PROJECT_NAME_UNDERSCORE }}-${{ env.ARCH }}.exe
+          path: target/${{ env.ARCH }}/release/${{ env.PROJECT_NAME_UNDERSCORE }}.exe
+      - name: 'Upload bin Artifact'
+        uses: actions/upload-artifact@v2
+        with:
+          name: lib${{ env.PROJECT_NAME_UNDERSCORE }}-${{ env.ARCH }}.rlib  
+          path: target/${{ env.ARCH }}/release/lib${{ env.PROJECT_NAME_UNDERSCORE }}.rlib
+  
+  build-maos:
+    runs-on: macos-latest
+    name: Release Packaging MacOS
+    env:
+      PROJECT_NAME_UNDERSCORE: renvy
+      ARCH: x86_64-apple-darwin
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Install latest rust toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: stable
+          override: true
+          target: ${{ env.ARCH }}
+      - name: Build
+        run: cargo build --release --target=${{ env.ARCH }}
+      - name: 'Upload lib Artifact'
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{ env.PROJECT_NAME_UNDERSCORE }}-${{ env.ARCH }}
+          path: target/${{ env.ARCH }}/release/${{ env.PROJECT_NAME_UNDERSCORE }}
+      - name: 'Upload bin Artifact'
+        uses: actions/upload-artifact@v2
+        with:
+          name: lib${{ env.PROJECT_NAME_UNDERSCORE }}-${{ env.ARCH }}.rlib  
+          path: target/${{ env.ARCH }}/release/lib${{ env.PROJECT_NAME_UNDERSCORE }}.rlib
+  

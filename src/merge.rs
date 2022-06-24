@@ -29,9 +29,7 @@ mod test {
         let settings =
             merge::Settings::from([("domain".into(), Some("https://benjaminsattler.net".into()))]);
 
-        let defaults = merge::Settings::from([
-            ("port".into(), Some("433".into())),
-        ]);
+        let defaults = merge::Settings::from([("port".into(), Some("433".into()))]);
 
         let merged = merge::merge(settings, defaults, None);
 
@@ -44,29 +42,31 @@ mod test {
         let settings =
             merge::Settings::from([("domain".into(), Some("https://benjaminsattler.net".into()))]);
 
-        let defaults = merge::Settings::from([
-            ("domain".into(), Some("https://example".into())),
-        ]);
+        let defaults = merge::Settings::from([("domain".into(), Some("https://example".into()))]);
 
         let merged = merge::merge(settings, defaults, None);
 
         assert!(merged.get("domain").is_some());
-        assert_eq!(merged.get("domain").unwrap(), &Some(String::from("https://benjaminsattler.net")));
+        assert_eq!(
+            merged.get("domain").unwrap(),
+            &Some(String::from("https://benjaminsattler.net"))
+        );
     }
 
     #[test]
     fn merge_keeps_settings_without_defaults_if_cleaning_is_default() {
         let settings =
-        merge::Settings::from([("domain".into(), Some("https://benjaminsattler.net".into()))]);
+            merge::Settings::from([("domain".into(), Some("https://benjaminsattler.net".into()))]);
 
-        let defaults = merge::Settings::from([
-            ("port".into(), Some("433".into())),
-        ]);
+        let defaults = merge::Settings::from([("port".into(), Some("433".into()))]);
 
         let merged = merge::merge(settings, defaults, None);
 
         assert!(merged.get("domain").is_some());
-        assert_eq!(merged.get("domain").unwrap(), &Some(String::from("https://benjaminsattler.net")));
+        assert_eq!(
+            merged.get("domain").unwrap(),
+            &Some(String::from("https://benjaminsattler.net"))
+        );
     }
 
     #[test]
@@ -74,14 +74,15 @@ mod test {
         let settings =
             merge::Settings::from([("domain".into(), Some("https://benjaminsattler.net".into()))]);
 
-        let defaults = merge::Settings::from([
-            ("port".into(), Some("433".into())),
-        ]);
+        let defaults = merge::Settings::from([("port".into(), Some("433".into()))]);
 
         let merged = merge::merge(settings, defaults, Some(false));
 
         assert!(merged.get("domain").is_some());
-        assert_eq!(merged.get("domain").unwrap(), &Some(String::from("https://benjaminsattler.net")));
+        assert_eq!(
+            merged.get("domain").unwrap(),
+            &Some(String::from("https://benjaminsattler.net"))
+        );
     }
 
     #[test]
@@ -89,9 +90,7 @@ mod test {
         let settings =
             merge::Settings::from([("domain".into(), Some("https://benjaminsattler.net".into()))]);
 
-        let defaults = merge::Settings::from([
-            ("port".into(), Some("433".into())),
-        ]);
+        let defaults = merge::Settings::from([("port".into(), Some("433".into()))]);
 
         let merged = merge::merge(settings, defaults, Some(true));
 
