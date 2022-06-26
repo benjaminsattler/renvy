@@ -26,11 +26,11 @@ fn main() {
         (Err(_), Err(_)) => panic!("Error reading input files"),
     };
 
-    let (settings, defaults) = (renvy::deserialize(settings), renvy::deserialize(defaults));
+    let (settings, defaults) = (renvy::deserialize(&settings), renvy::deserialize(&defaults));
 
     let merged = renvy::merge(settings, defaults, Some(matches.cleanup));
 
-    let merged = renvy::serialize(merged);
+    let merged = renvy::serialize(&merged);
 
-    renvy::write_file(&matches.settings, merged).unwrap()
+    renvy::write_file(&matches.settings, &merged).unwrap()
 }

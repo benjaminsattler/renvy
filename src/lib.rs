@@ -21,7 +21,7 @@
 //! assert!(settings.is_ok());
 //! if let Ok(settings) = settings {
 //!     // renvy::deserialize consumes this String and returns an instance of renvy::Settings
-//!     let settings: renvy::Settings = renvy::deserialize(settings);
+//!     let settings: renvy::Settings = renvy::deserialize(&settings);
 //!     println!("Number of settings read: {}", &settings.len());
 //!     settings.iter().for_each(|(key, value)| {
 //!         println!("{:?}: {:?}\n", key, value);
@@ -35,7 +35,7 @@
 //! assert!(defaults.is_ok());
 //! if let Ok(defaults) = defaults {
 //!     // we're reusing the same data structure for defaults
-//!     let defaults: renvy::Settings = renvy::deserialize(defaults);
+//!     let defaults: renvy::Settings = renvy::deserialize(&defaults);
 //!     println!("Number of defaults read: {}", &defaults.len());
 //!     defaults.iter().for_each(|(key, value)| {
 //!         println!("{:?}: {:?}\n", key, value);
@@ -103,10 +103,10 @@
 //! ```no_run
 //! // first we're serializing the object renvy::Settings into a String
 //! # let merged = renvy::Settings::from([]);
-//! let merged = renvy::serialize(merged);
+//! let merged = renvy::serialize(&merged);
 //!
 //! // then we take that String and write it back into the original settings file
-//! let result = renvy::write_file("./.env", merged);
+//! let result = renvy::write_file("./.env", &merged);
 //! // write_file returns a std::io::Result<()>
 //! assert!(result.is_ok());
 //! ```
