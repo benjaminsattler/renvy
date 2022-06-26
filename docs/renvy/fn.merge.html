@@ -1,0 +1,81 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Merges two instances of [`Settings`] together so that the following rules are satisfied:"><meta name="keywords" content="rust, rustlang, rust-lang, merge"><title>merge in renvy - Rust</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../normalize.css"><link rel="stylesheet" type="text/css" href="../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../dark.css" disabled><link rel="stylesheet" type="text/css" href="../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../storage.js"></script><script src="../crates.js"></script><script defer src="../main.js"></script>
+    <noscript><link rel="stylesheet" href="../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../favicon.svg"></head><body class="rustdoc fn"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../renvy/index.html"><div class="logo-container"><img class="rust-logo" src="../rust-logo.svg" alt="logo"></div>
+        </a><h2 class="location"></h2>
+    </nav>
+    <nav class="sidebar"><a class="sidebar-logo" href="../renvy/index.html"><div class="logo-container"><img class="rust-logo" src="../rust-logo.svg" alt="logo"></div>
+        </a><div class="sidebar-elems"><h2 class="location"><a href="index.html">In renvy</a></h2><div id="sidebar-vars" data-name="merge" data-ty="fn" data-relpath=""></div><script defer src="sidebar-items.js"></script></div></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../renvy/index.html"><img class="rust-logo" src="../rust-logo.svg" alt="logo"></a><nav class="sub"><div class="theme-picker hidden"><button id="theme-picker" aria-label="Pick another theme!" aria-haspopup="menu" title="themes"><img width="22" height="22" alt="Pick another theme!" src="../brush.svg"></button><div id="theme-choices" role="menu"></div></div><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><button type="button" id="help-button" title="help">?</button><a id="settings-menu" href="../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../wheel.svg"></a></div></form></nav></div><section id="main-content" class="content"><div class="main-heading">
+    <h1 class="fqn"><span class="in-band">Function <a href="index.html">renvy</a>::<wbr><a class="fn" href="#">merge</a><button id="copy-path" onclick="copy_path(this)" title="Copy item path to clipboard"><img src="../clipboard.svg" width="19" height="18" alt="Copy item path"></button></span></h1><span class="out-of-band"><a class="srclink" href="../src/renvy/merge.rs.html#136-150">source</a> · <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">[<span class="inner">&#x2212;</span>]</a></span></div><div class="docblock item-decl"><pre class="rust fn"><code>pub fn merge(<br>&nbsp;&nbsp;&nbsp;&nbsp;settings: <a class="type" href="type.Settings.html" title="type renvy::Settings">Settings</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;defaults: <a class="type" href="type.Settings.html" title="type renvy::Settings">Settings</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;clean: <a class="enum" href="https://doc.rust-lang.org/1.61.0/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/1.61.0/std/primitive.bool.html">bool</a>&gt;<br>) -&gt; <a class="type" href="type.Settings.html" title="type renvy::Settings">Settings</a></code></pre></div><details class="rustdoc-toggle top-doc" open><summary class="hideme"><span>Expand description</span></summary><div class="docblock"><p>Merges two instances of <a href="type.Settings.html" title="Settings"><code>Settings</code></a> together so that the following rules are satisfied:</p>
+<ul>
+<li>all key-value pairs on <code>defaults</code> that are missing on <code>settings</code> will be added</li>
+<li>existing key-value pairs of <code>settings</code> retain their value</li>
+<li>if the parameter <code>clean</code> receives <code>Some(true)</code>, then any key-value pair on <code>settings</code>
+which is missing from <code>defaults</code> will be removed</li>
+</ul>
+<h3 id="examples"><a href="#examples">Examples</a></h3>
+<p>Default behaviour when <code>clean</code> is <code>None</code>. This is the same behaviour like passing
+<code>Some(false)</code> explicitly.</p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="comment">// &quot;ssl&quot; exists in both objects, it&#39;s &quot;true&quot; here</span>
+<span class="kw">let</span> <span class="ident">settings</span> <span class="op">=</span> <span class="ident">renvy::Settings::from</span>([
+    (<span class="string">&quot;url&quot;</span>.<span class="ident">into</span>(), <span class="prelude-val">Some</span>(<span class="ident">String::from</span>(<span class="string">&quot;https://example.com&quot;</span>))),
+    (<span class="string">&quot;ssl&quot;</span>.<span class="ident">into</span>(), <span class="prelude-val">Some</span>(<span class="ident">String::from</span>(<span class="string">&quot;true&quot;</span>)))
+]);
+
+<span class="comment">// &quot;ssl&quot; is &quot;false&quot; here</span>
+<span class="kw">let</span> <span class="ident">defaults</span> <span class="op">=</span> <span class="ident">renvy::Settings::from</span>([
+    (<span class="string">&quot;port&quot;</span>.<span class="ident">into</span>(), <span class="prelude-val">None</span>),
+    (<span class="string">&quot;ssl&quot;</span>.<span class="ident">into</span>(), <span class="prelude-val">Some</span>(<span class="ident">String::from</span>(<span class="string">&quot;false&quot;</span>)))
+]);
+
+<span class="kw">let</span> <span class="ident">merged</span> <span class="op">=</span> <span class="ident">renvy::merge</span>(<span class="ident">settings</span>, <span class="ident">defaults</span>, <span class="prelude-val">None</span>);
+
+<span class="comment">// &quot;ssl&quot; remains &quot;true&quot;, &quot;port&quot; is added, and &quot;url&quot; is left intact</span>
+<span class="macro">assert_eq!</span>(<span class="ident">merged</span>.<span class="ident">get</span>(<span class="string">&quot;url&quot;</span>.<span class="ident">into</span>()).<span class="ident">unwrap</span>(), <span class="kw-2">&amp;</span><span class="prelude-val">Some</span>(<span class="ident">String::from</span>(<span class="string">&quot;https://example.com&quot;</span>)));
+<span class="macro">assert_eq!</span>(<span class="ident">merged</span>.<span class="ident">get</span>(<span class="string">&quot;ssl&quot;</span>.<span class="ident">into</span>()).<span class="ident">unwrap</span>(), <span class="kw-2">&amp;</span><span class="prelude-val">Some</span>(<span class="ident">String::from</span>(<span class="string">&quot;true&quot;</span>)));
+<span class="macro">assert_eq!</span>(<span class="ident">merged</span>.<span class="ident">get</span>(<span class="string">&quot;port&quot;</span>.<span class="ident">into</span>()).<span class="ident">unwrap</span>(), <span class="kw-2">&amp;</span><span class="prelude-val">None</span>);</code></pre></div>
+<p>Behaviour when <code>clean</code> is disabled with <code>Some(false)</code>: Extra keys in <code>settings</code>
+remain untouched. This is the default behaviour that is also applied when <code>clean</code>
+is empty (<code>None</code>).</p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="comment">// &quot;ssl&quot; exists in both objects, it&#39;s &quot;true&quot; here</span>
+<span class="kw">let</span> <span class="ident">settings</span> <span class="op">=</span> <span class="ident">renvy::Settings::from</span>([
+    (<span class="string">&quot;url&quot;</span>.<span class="ident">into</span>(), <span class="prelude-val">Some</span>(<span class="ident">String::from</span>(<span class="string">&quot;https://example.com&quot;</span>))),
+    (<span class="string">&quot;ssl&quot;</span>.<span class="ident">into</span>(), <span class="prelude-val">Some</span>(<span class="ident">String::from</span>(<span class="string">&quot;true&quot;</span>)))
+]);
+
+<span class="comment">// &quot;ssl&quot; is &quot;false&quot; here</span>
+<span class="kw">let</span> <span class="ident">defaults</span> <span class="op">=</span> <span class="ident">renvy::Settings::from</span>([
+    (<span class="string">&quot;port&quot;</span>.<span class="ident">into</span>(), <span class="prelude-val">None</span>),
+    (<span class="string">&quot;ssl&quot;</span>.<span class="ident">into</span>(), <span class="prelude-val">Some</span>(<span class="ident">String::from</span>(<span class="string">&quot;false&quot;</span>)))
+]);
+
+<span class="kw">let</span> <span class="ident">merged</span> <span class="op">=</span> <span class="ident">renvy::merge</span>(<span class="ident">settings</span>, <span class="ident">defaults</span>, <span class="prelude-val">Some</span>(<span class="bool-val">false</span>));
+
+<span class="comment">// &quot;ssl&quot; remains &quot;true&quot;, &quot;port&quot; is added, and &quot;url&quot; is left intact</span>
+<span class="macro">assert_eq!</span>(<span class="ident">merged</span>.<span class="ident">get</span>(<span class="string">&quot;url&quot;</span>.<span class="ident">into</span>()).<span class="ident">unwrap</span>(), <span class="kw-2">&amp;</span><span class="prelude-val">Some</span>(<span class="ident">String::from</span>(<span class="string">&quot;https://example.com&quot;</span>)));
+<span class="macro">assert_eq!</span>(<span class="ident">merged</span>.<span class="ident">get</span>(<span class="string">&quot;ssl&quot;</span>.<span class="ident">into</span>()).<span class="ident">unwrap</span>(), <span class="kw-2">&amp;</span><span class="prelude-val">Some</span>(<span class="ident">String::from</span>(<span class="string">&quot;true&quot;</span>)));
+<span class="macro">assert_eq!</span>(<span class="ident">merged</span>.<span class="ident">get</span>(<span class="string">&quot;port&quot;</span>.<span class="ident">into</span>()).<span class="ident">unwrap</span>(), <span class="kw-2">&amp;</span><span class="prelude-val">None</span>);</code></pre></div>
+<p>Behaviour when <code>clean</code> is enabled with <code>Some(true)</code>: Extra keys in <code>settings</code>
+are being removed so that only keys that exist in <code>defaults</code> remain in <code>settings</code>.</p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="comment">// &quot;ssl&quot; exists in both objects, it&#39;s &quot;true&quot; here</span>
+<span class="comment">// &quot;url&quot; exists only in &quot;settings&quot;.</span>
+<span class="kw">let</span> <span class="ident">settings</span> <span class="op">=</span> <span class="ident">renvy::Settings::from</span>([
+    (<span class="string">&quot;url&quot;</span>.<span class="ident">into</span>(), <span class="prelude-val">Some</span>(<span class="ident">String::from</span>(<span class="string">&quot;https://example.com&quot;</span>))),
+    (<span class="string">&quot;ssl&quot;</span>.<span class="ident">into</span>(), <span class="prelude-val">Some</span>(<span class="ident">String::from</span>(<span class="string">&quot;true&quot;</span>)))
+]);
+
+<span class="comment">// &quot;ssl&quot; is &quot;false&quot; here</span>
+<span class="kw">let</span> <span class="ident">defaults</span> <span class="op">=</span> <span class="ident">renvy::Settings::from</span>([
+    (<span class="string">&quot;port&quot;</span>.<span class="ident">into</span>(), <span class="prelude-val">None</span>),
+    (<span class="string">&quot;ssl&quot;</span>.<span class="ident">into</span>(), <span class="prelude-val">Some</span>(<span class="ident">String::from</span>(<span class="string">&quot;false&quot;</span>)))
+]);
+
+<span class="kw">let</span> <span class="ident">merged</span> <span class="op">=</span> <span class="ident">renvy::merge</span>(<span class="ident">settings</span>, <span class="ident">defaults</span>, <span class="prelude-val">Some</span>(<span class="bool-val">true</span>));
+
+<span class="comment">// &quot;ssl&quot; remains &quot;true&quot;, &quot;port&quot; is added, and &quot;url&quot; is removed</span>
+<span class="macro">assert_eq!</span>(<span class="ident">merged</span>.<span class="ident">get</span>(<span class="string">&quot;url&quot;</span>.<span class="ident">into</span>()), <span class="prelude-val">None</span>);
+<span class="macro">assert_eq!</span>(<span class="ident">merged</span>.<span class="ident">get</span>(<span class="string">&quot;ssl&quot;</span>.<span class="ident">into</span>()).<span class="ident">unwrap</span>(), <span class="kw-2">&amp;</span><span class="prelude-val">Some</span>(<span class="ident">String::from</span>(<span class="string">&quot;true&quot;</span>)));
+<span class="macro">assert_eq!</span>(<span class="ident">merged</span>.<span class="ident">get</span>(<span class="string">&quot;port&quot;</span>.<span class="ident">into</span>()).<span class="ident">unwrap</span>(), <span class="kw-2">&amp;</span><span class="prelude-val">None</span>);</code></pre></div>
+</div></details></section><section id="search" class="content hidden"></section></div></main><div id="rustdoc-vars" data-root-path="../" data-current-crate="renvy" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.61.0 (fe5b13d68 2022-05-18)" ></div>
+</body></html>
