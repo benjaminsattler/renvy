@@ -1,0 +1,21 @@
+[package]
+name = "librenvy"
+version = "0.1.0"
+edition = "2021"
+authors = ["Benjamin Sattler <bsattler.inbox@gmail.com>"]
+description = ".env file manager that merges defaults with custom settings"
+license = "MIT"
+keywords = ["env", "file", "settings"]
+categories = ["Command line  utilities", "Development tools", "Configuration", "Filesystem"]
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[lib]
+name = "renvy"
+path = "src/lib.rs"
+edition = "2021"
+
+[dependencies]
+
+[dev-dependencies]
+cargo-make = "0.35.13"

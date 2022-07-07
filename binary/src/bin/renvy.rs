@@ -1,4 +1,5 @@
 use clap::Parser;
+use renvy;
 
 #[derive(Parser)]
 #[clap(author, version, about)]
