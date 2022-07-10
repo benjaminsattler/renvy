@@ -10,7 +10,7 @@ jobs:
     env:
       PROJECT_NAME_UNDERSCORE: renvy
       CARGO_INCREMENTAL: 0
-      RUSTFLAGS: -Zprofile -Ccodegen-units=1 -Copt-level=0 -Clink-dead-code -Coverflow-checks=off -Zpanic_abort_tests -Cpanic=abort
+      RUSTFLAGS: -Ccodegen-units=1 -Copt-level=0 -Clink-dead-code -Coverflow-checks=off
       RUSTDOCFLAGS: -Cpanic=abort
       RUST_BACKTRACE: full
     runs-on: ubuntu-latest
@@ -21,7 +21,7 @@ jobs:
       - uses: actions-rs/toolchain@v1
         with:
           profile: minimal
-          toolchain: nightly
+          toolchain: stable
           override: true
       - name: Cache dependencies
         uses: actions/cache@v2

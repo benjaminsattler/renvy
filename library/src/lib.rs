@@ -9,6 +9,12 @@
 //! and optionally it'll remove keys from the settings file if they are absent from
 //! the template file.
 //!
+//! ## Installation
+//!
+//! ```sh
+//! cargo install librenvy
+//! ```
+//!
 //! ## Parsing files
 //!
 //! This example shows how you can easily read existing files into [`Settings`] struct's
