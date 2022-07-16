@@ -18,3 +18,6 @@ dependencies = [
   "docs-build",
   "docs-copy-to-pages"
 ]
+
+[tasks.readme]
+script = [ "cargo readme > README.md" ]
