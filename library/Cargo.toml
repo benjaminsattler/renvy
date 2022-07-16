@@ -1,14 +1,14 @@
 [package]
 authors = ["Benjamin Sattler <bsattler.inbox@gmail.com>"]
 edition = "2021"
-categories = ["Command line  utilities", "Development tools", "Configuration", "Filesystem"]
+categories = ["command-line-utilities", "development-tools", "config", "filesystem"]
 description = ".env file manager that merges defaults with custom settings"
 homepage = "https://renvy.benjaminsattler.net"
 keywords = ["env", "file", "settings"]
 license = "MIT"
 name = "librenvy"
 repository = "https://github.com/benjaminsattler/renvy"
-version = "0.1.0"
+version = "0.1.1"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
