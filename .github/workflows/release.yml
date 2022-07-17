@@ -1,4 +1,9 @@
-on: workflow_call
+on:
+  workflow_call:
+    secrets:
+      crates-token:
+        description: 'Crates.io token to use for publishing'
+        required: true
 
 name: Release
 
@@ -9,25 +14,38 @@ jobs:
     env:
       PROJECT_NAME_UNDERSCORE: renvy
     steps:
+      - name: Download artifacts
+        uses: dawidd6/action-download-artifact@v2
+        with:
+          workflow: push-tag.yml
+          path: deploy
+          skip_unpack: true
+          run_id: ${{ github.run_id }}
+      - name: Display structure of downloaded files
+        run: ls -R
+        working-directory: deploy
       - uses: ncipollo/release-action@v1
         with:
-          artifacts: "${{ env.PROJECT_NAME_UNDERSCORE }}*,lib${{ env.PROJECT_NAME_UNDERSCORE }}*"
+          artifacts: "deploy/*.zip"
           artifactErrorsFailBuild: true
           draft: true
           generateReleaseNotes: true
 
-  crates-io-release:
-    name: Crates.io Release
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-      - uses: actions-rs/toolchain@v1
-        with:
-          profile: minimal
-          toolchain: stable
-          override: true
-      - run: cargo publish --token ${CRATES_TOKEN} --dry-run
-        env:
-          CRATES_TOKEN: ${{ secrets.CRATES_TOKEN }}
+  # crates-io-release:
+  #   name: Crates.io Release
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Checkout
+  #       uses: actions/checkout@v3
+  #       with:
+  #         fetch-depth: 0
+  #     - name: Install latest rust toolchain
+  #       uses: actions-rs/toolchain@v1
+  #       with:
+  #         profile: minimal
+  #         toolchain: stable
+  #         override: true
+  #     - name: Publish library librenvy to crates.io
+  #       run: cargo publish --token ${{ secrets.crates-token }} -p librenvy --dry-run
+  #     - name: Publish binary renvy to crates.io
+  #       run: cargo publish --token ${{ secrets.crates-token }} -p librenvy --dry-run

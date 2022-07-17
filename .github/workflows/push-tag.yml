@@ -15,9 +15,10 @@ jobs:
   trigger-release-packaging:
     name: Release Packaging
     uses: benjaminsattler/renvy/.github/workflows/release-packaging.yml@master
-
   trigger-release:
     name: Release
     uses: benjaminsattler/renvy/.github/workflows/release.yml@master
+    secrets:
+      crates-token: ${{ secrets.CRATES_TOKEN }}
     needs: trigger-release-packaging
     if: ${{ success() }}

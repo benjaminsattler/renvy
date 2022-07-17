@@ -10,10 +10,12 @@ jobs:
       ARCH: x86_64-unknown-linux-gnu
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v3
         with:
           fetch-depth: 0
-      - uses: actions-rs/toolchain@v1
+      - name: Install latest rust toolchain
+        uses: actions-rs/toolchain@v1
         with:
           profile: minimal
           toolchain: stable
@@ -21,12 +23,12 @@ jobs:
           target: ${{ env.ARCH }}
       - name: Release Build
         run: cargo build --release --target=${{ env.ARCH }}
-      - name: 'Upload lib Artifact'
+      - name: Upload lib Artifact
         uses: actions/upload-artifact@v2
         with:
           name: ${{ env.PROJECT_NAME_UNDERSCORE }}-${{ env.ARCH }}
           path: target/${{ env.ARCH }}/release/${{ env.PROJECT_NAME_UNDERSCORE }}
-      - name: 'Upload bin Artifact'
+      - name: Upload bin Artifact
         uses: actions/upload-artifact@v2
         with:
           name: lib${{ env.PROJECT_NAME_UNDERSCORE }}-${{ env.ARCH }}.rlib
@@ -50,20 +52,20 @@ jobs:
           toolchain: stable
           override: true
           target: ${{ env.ARCH }}
-      - name: Build
+      - name: Release Build
         run: cargo build --release --target=${{ env.ARCH }}
-      - name: 'Upload lib Artifact'
+      - name: Upload lib Artifact
         uses: actions/upload-artifact@v2
         with:
           name: ${{ env.PROJECT_NAME_UNDERSCORE }}-${{ env.ARCH }}.exe
           path: target/${{ env.ARCH }}/release/${{ env.PROJECT_NAME_UNDERSCORE }}.exe
-      - name: 'Upload bin Artifact'
+      - name: Upload bin Artifact
         uses: actions/upload-artifact@v2
         with:
           name: lib${{ env.PROJECT_NAME_UNDERSCORE }}-${{ env.ARCH }}.rlib  
           path: target/${{ env.ARCH }}/release/lib${{ env.PROJECT_NAME_UNDERSCORE }}.rlib
   
-  build-maos:
+  build-macos:
     runs-on: macos-latest
     name: Release Packaging MacOS
     env:
@@ -81,14 +83,14 @@ jobs:
           toolchain: stable
           override: true
           target: ${{ env.ARCH }}
-      - name: Build
+      - name: Release Build
         run: cargo build --release --target=${{ env.ARCH }}
-      - name: 'Upload lib Artifact'
+      - name: Upload lib Artifact
         uses: actions/upload-artifact@v2
         with:
           name: ${{ env.PROJECT_NAME_UNDERSCORE }}-${{ env.ARCH }}
           path: target/${{ env.ARCH }}/release/${{ env.PROJECT_NAME_UNDERSCORE }}
-      - name: 'Upload bin Artifact'
+      - name: Upload bin Artifact
         uses: actions/upload-artifact@v2
         with:
           name: lib${{ env.PROJECT_NAME_UNDERSCORE }}-${{ env.ARCH }}.rlib  
