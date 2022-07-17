@@ -1,7 +1,4 @@
-on:
-  pull_request:
-  push:
-
+on: workflow_call
 
 name: Check and Lint
 

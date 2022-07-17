@@ -1,0 +1,17 @@
+on:
+  push:
+    branches:
+      - master
+
+name: Push to master
+
+jobs:
+  trigger-check-and-lint:
+    name: Check and Lint
+    uses: benjaminsattler/renvy/.github/workflows/check-and-lint.yml@master
+  trigger-test:
+    name: Test
+    uses: benjaminsattler/renvy/.github/workflows/test.yml@master
+  trigger-release-packaging:
+    name: Release Packaging
+    uses: benjaminsattler/renvy/.github/workflows/release-packaging.yml@master

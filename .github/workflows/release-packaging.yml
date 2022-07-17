@@ -1,7 +1,4 @@
-on:
-  push:
-    branches:
-      - master
+on: workflow_call
 
 name: Release Packaging
 
