@@ -22,17 +22,20 @@ jobs:
           override: true
           target: ${{ env.ARCH }}
       - name: Release Build
-        run: cargo build --release --target=${{ env.ARCH }}
+        run: |
+          cargo build --release --target=${{ env.ARCH }} \
+          && mv target/${{ env.ARCH }}/release/${{ env.PROJECT_NAME_UNDERSCORE }} target/${{ env.ARCH }}/release/${{ env.PROJECT_NAME_UNDERSCORE }}-${{ env.ARCH }} \
+          && mv target/${{ env.ARCH }}/release/lib${{ env.PROJECT_NAME_UNDERSCORE }}.rlib target/${{ env.ARCH }}/release/lib${{ env.PROJECT_NAME_UNDERSCORE }}-${{ env.ARCH }}.rlib
       - name: Upload lib Artifact
         uses: actions/upload-artifact@v2
         with:
           name: ${{ env.PROJECT_NAME_UNDERSCORE }}-${{ env.ARCH }}
-          path: target/${{ env.ARCH }}/release/${{ env.PROJECT_NAME_UNDERSCORE }}
+          path: target/${{ env.ARCH }}/release/${{ env.PROJECT_NAME_UNDERSCORE }}-${{ env.ARCH }}
       - name: Upload bin Artifact
         uses: actions/upload-artifact@v2
         with:
           name: lib${{ env.PROJECT_NAME_UNDERSCORE }}-${{ env.ARCH }}.rlib
-          path: target/${{ env.ARCH }}/release/lib${{ env.PROJECT_NAME_UNDERSCORE }}.rlib
+          path: target/${{ env.ARCH }}/release/lib${{ env.PROJECT_NAME_UNDERSCORE }}-${{ env.ARCH }}.rlib
   
   build-windows:
     runs-on: windows-latest
@@ -53,17 +56,22 @@ jobs:
           override: true
           target: ${{ env.ARCH }}
       - name: Release Build
-        run: cargo build --release --target=${{ env.ARCH }}
+        run: |
+          cargo build --release --target=${{ env.ARCH }} ;
+          if ($?) {
+          mv target/${{ env.ARCH }}/release/${{ env.PROJECT_NAME_UNDERSCORE }}.exe target/${{ env.ARCH }}/release/${{ env.PROJECT_NAME_UNDERSCORE }}-${{ env.ARCH }}.exe ;
+          mv target/${{ env.ARCH }}/release/lib${{ env.PROJECT_NAME_UNDERSCORE }}.rlib target/${{ env.ARCH }}/release/lib${{ env.PROJECT_NAME_UNDERSCORE }}-${{ env.ARCH }}.rlib
+          }
       - name: Upload lib Artifact
         uses: actions/upload-artifact@v2
         with:
           name: ${{ env.PROJECT_NAME_UNDERSCORE }}-${{ env.ARCH }}.exe
-          path: target/${{ env.ARCH }}/release/${{ env.PROJECT_NAME_UNDERSCORE }}.exe
+          path: target/${{ env.ARCH }}/release/${{ env.PROJECT_NAME_UNDERSCORE }}-${{ env.ARCH }}.exe
       - name: Upload bin Artifact
         uses: actions/upload-artifact@v2
         with:
           name: lib${{ env.PROJECT_NAME_UNDERSCORE }}-${{ env.ARCH }}.rlib  
-          path: target/${{ env.ARCH }}/release/lib${{ env.PROJECT_NAME_UNDERSCORE }}.rlib
+          path: target/${{ env.ARCH }}/release/lib${{ env.PROJECT_NAME_UNDERSCORE }}-${{ env.ARCH }}.rlib
   
   build-macos:
     runs-on: macos-latest
@@ -84,15 +92,18 @@ jobs:
           override: true
           target: ${{ env.ARCH }}
       - name: Release Build
-        run: cargo build --release --target=${{ env.ARCH }}
+        run: |
+          cargo build --release --target=${{ env.ARCH }} \
+          && mv target/${{ env.ARCH }}/release/${{ env.PROJECT_NAME_UNDERSCORE }} target/${{ env.ARCH }}/release/${{ env.PROJECT_NAME_UNDERSCORE }}-${{ env.ARCH }} \
+          && mv target/${{ env.ARCH }}/release/lib${{ env.PROJECT_NAME_UNDERSCORE }}.rlib target/${{ env.ARCH }}/release/lib${{ env.PROJECT_NAME_UNDERSCORE }}-${{ env.ARCH }}.rlib
       - name: Upload lib Artifact
         uses: actions/upload-artifact@v2
         with:
           name: ${{ env.PROJECT_NAME_UNDERSCORE }}-${{ env.ARCH }}
-          path: target/${{ env.ARCH }}/release/${{ env.PROJECT_NAME_UNDERSCORE }}
+          path: target/${{ env.ARCH }}/release/${{ env.PROJECT_NAME_UNDERSCORE }}-${{ env.ARCH }}
       - name: Upload bin Artifact
         uses: actions/upload-artifact@v2
         with:
           name: lib${{ env.PROJECT_NAME_UNDERSCORE }}-${{ env.ARCH }}.rlib  
-          path: target/${{ env.ARCH }}/release/lib${{ env.PROJECT_NAME_UNDERSCORE }}.rlib
+          path: target/${{ env.ARCH }}/release/lib${{ env.PROJECT_NAME_UNDERSCORE }}-${{ env.ARCH }}.rlib
   

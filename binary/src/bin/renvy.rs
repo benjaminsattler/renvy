@@ -49,6 +49,7 @@
 //!
 use clap::Parser;
 use renvy;
+use std::process::exit;
 
 #[derive(Parser)]
 #[clap(author, version, about)]
@@ -71,9 +72,9 @@ fn main() {
         renvy::read_file(&matches.defaults),
     ) {
         (Ok(settings), Ok(defaults)) => (settings, defaults),
-        (Ok(_), Err(_)) => panic!("Error reading defaults file"),
-        (Err(_), Ok(_)) => panic!("Error reading settings file"),
-        (Err(_), Err(_)) => panic!("Error reading input files"),
+        (Ok(_), Err(_)) => exit_with_error("Error reading defaults file", -1),
+        (Err(_), Ok(_)) => exit_with_error("Error reading settings file", -2),
+        (Err(_), Err(_)) => exit_with_error("Error reading input files", -3),
     };
 
     let (settings, defaults) = (renvy::deserialize(&settings), renvy::deserialize(&defaults));
@@ -83,4 +84,9 @@ fn main() {
     let merged = renvy::serialize(&merged);
 
     renvy::write_file(&matches.settings, &merged).unwrap()
+}
+
+fn exit_with_error(error: &str, code: i32) -> ! {
+    eprintln!("{}", error);
+    exit(code);
 }

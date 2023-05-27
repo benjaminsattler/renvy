@@ -193,7 +193,7 @@ extra-setting=extra-value\n";
     let mut cmd = bin_under_test.command();
     let result = cmd.arg("-c").arg(&settings_path).output().unwrap();
 
-    assert!(!result.status.success());
+    assert_eq!(result.status.code(), Some(2));
 
     teardown(&settings_path, &defaults_path);
 }
@@ -209,7 +209,7 @@ fn test_merge_with_no_parameters() {
     let mut cmd = bin_under_test.command();
     let result = cmd.output().unwrap();
 
-    assert!(!result.status.success());
+    assert_eq!(result.status.code(), Some(2));
 
     let stderr = std::str::from_utf8(&result.stderr).unwrap();
     assert!(predicate::str::contains("error")
@@ -302,4 +302,131 @@ fn test_merge_version_shorthand() {
 
     let stdout = std::str::from_utf8(&result.stdout).unwrap();
     assert!(predicate::str::contains(env!("CARGO_PKG_VERSION")).eval(&stdout));
+}
+
+#[test]
+fn test_missing_defaults_file() {
+    let defaults = "domain=https://example.com\n\
+port=443\n\
+extra=foo=bar\n\
+user-agent=Microsoft Internet Explorer\n\
+empty=\n";
+
+    let settings = "domain=https://benjaminsattler.net\n\
+extra-setting=extra-value\n";
+
+    let settings_path = format!(
+        "{}/{}.env",
+        std::env::temp_dir().to_string_lossy(),
+        Uuid::new_v4()
+    );
+    let defaults_path = format!("{}.dist", &settings_path);
+
+    setup(&settings_path, settings, &defaults_path, defaults);
+
+    fs::remove_file(&defaults_path).expect("Failed to prepare test by removing defaults file");
+
+    let bin_under_test = escargot::CargoBuild::new()
+        .bin("renvy")
+        .current_release()
+        .current_target()
+        .run()
+        .unwrap();
+
+    let mut cmd = bin_under_test.command();
+    let result = cmd
+        .arg(&settings_path)
+        .arg(&defaults_path)
+        .output()
+        .unwrap();
+
+    let stderr = std::str::from_utf8(&result.stderr).unwrap();
+
+    assert_eq!(result.status.code(), Some(255));
+    assert_eq!(stderr, "Error reading defaults file\n");
+}
+
+#[test]
+fn test_missing_settings_file() {
+    let defaults = "domain=https://example.com\n\
+port=443\n\
+extra=foo=bar\n\
+user-agent=Microsoft Internet Explorer\n\
+empty=\n";
+
+    let settings = "domain=https://benjaminsattler.net\n\
+extra-setting=extra-value\n";
+
+    let settings_path = format!(
+        "{}/{}.env",
+        std::env::temp_dir().to_string_lossy(),
+        Uuid::new_v4()
+    );
+    let defaults_path = format!("{}.dist", &settings_path);
+
+    setup(&settings_path, settings, &defaults_path, defaults);
+
+    fs::remove_file(&settings_path).expect("Failed to prepare test by removing settings file");
+
+    let bin_under_test = escargot::CargoBuild::new()
+        .bin("renvy")
+        .current_release()
+        .current_target()
+        .run()
+        .unwrap();
+
+    let mut cmd = bin_under_test.command();
+    let result = cmd
+        .arg(&settings_path)
+        .arg(&defaults_path)
+        .output()
+        .unwrap();
+
+    let stderr = std::str::from_utf8(&result.stderr).unwrap();
+
+    assert_eq!(result.status.code(), Some(254));
+    assert_eq!(stderr, "Error reading settings file\n");
+}
+
+#[test]
+fn test_missing_both_files() {
+    let defaults = "domain=https://example.com\n\
+port=443\n\
+extra=foo=bar\n\
+user-agent=Microsoft Internet Explorer\n\
+empty=\n";
+
+    let settings = "domain=https://benjaminsattler.net\n\
+extra-setting=extra-value\n";
+
+    let settings_path = format!(
+        "{}/{}.env",
+        std::env::temp_dir().to_string_lossy(),
+        Uuid::new_v4()
+    );
+    let defaults_path = format!("{}.dist", &settings_path);
+
+    setup(&settings_path, settings, &defaults_path, defaults);
+
+    fs::remove_file(&settings_path).expect("Failed to prepare test by removing settings file");
+    fs::remove_file(&defaults_path).expect("Failed to prepare test by removing defaults file");
+
+    let bin_under_test = escargot::CargoBuild::new()
+        .bin("renvy")
+        .current_release()
+        .current_target()
+        .run()
+        .unwrap();
+
+    let mut cmd = bin_under_test.command();
+    let result = cmd
+        .arg(&settings_path)
+        .arg(&defaults_path)
+        .output()
+        .unwrap();
+
+    let stderr = std::str::from_utf8(&result.stderr).unwrap();
+
+    assert_eq!(result.status.code(), Some(253));
+    assert_eq!(stderr, "Error reading input files\n");
 }

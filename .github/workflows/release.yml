@@ -15,18 +15,15 @@ jobs:
       PROJECT_NAME_UNDERSCORE: renvy
     steps:
       - name: Download artifacts
-        uses: dawidd6/action-download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
-          workflow: push-tag.yml
           path: deploy
-          skip_unpack: true
-          run_id: ${{ github.run_id }}
       - name: Display structure of downloaded files
         run: ls -R
         working-directory: deploy
       - uses: ncipollo/release-action@v1
         with:
-          artifacts: "deploy/*.zip"
+          artifacts: "deploy/*/*"
           artifactErrorsFailBuild: true
           draft: true
           generateReleaseNotes: true
