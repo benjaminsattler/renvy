@@ -2,6 +2,9 @@ on: workflow_call
 
 name: Check and Lint
 
+env:
+  PROJECT_NAME_UNDERSCORE: ${{ vars.PROJECT_NAME_UNDERSCORE }}
+
 jobs:
   check:
     name: Check

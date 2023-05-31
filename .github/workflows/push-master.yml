@@ -5,6 +5,9 @@ on:
 
 name: Push to master
 
+env:
+  PROJECT_NAME_UNDERSCORE: ${{ vars.PROJECT_NAME_UNDERSCORE }}
+
 jobs:
   trigger-check-and-lint:
     name: Check and Lint

@@ -2,11 +2,13 @@ on: workflow_call
 
 name: Test
 
+env:
+  PROJECT_NAME_UNDERSCORE: ${{ vars.PROJECT_NAME_UNDERSCORE }}
+
 jobs:
   test:
     name: Test
     env:
-      PROJECT_NAME_UNDERSCORE: renvy
       CARGO_INCREMENTAL: 0
       RUSTFLAGS: -Ccodegen-units=1 -Copt-level=0 -Clink-dead-code -Coverflow-checks=off
       RUSTDOCFLAGS: -Cpanic=abort

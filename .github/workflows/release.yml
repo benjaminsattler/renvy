@@ -7,12 +7,13 @@ on:
 
 name: Release
 
+env:
+  PROJECT_NAME_UNDERSCORE: ${{ vars.PROJECT_NAME_UNDERSCORE }}
+
 jobs:
   github-release:
     name: GitHub Release
     runs-on: ubuntu-latest
-    env:
-      PROJECT_NAME_UNDERSCORE: renvy
     steps:
       - name: Download artifacts
         uses: actions/download-artifact@v3
