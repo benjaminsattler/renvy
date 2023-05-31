@@ -19,17 +19,15 @@ jobs:
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
-      - name: Install latest rust toolchain
-        uses: actions-rs/toolchain@v1
+      - name: Install latest stable rust toolchain
+        uses: dtolnay/rust-toolchain@master
         with:
-          profile: minimal
           toolchain: stable
-          override: true
       - name: Cache dependencies
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         env:
           cache-name: cache-dependencies
-          RUST_BAKTRACE: 1
+          RUST_BACKTRACE: 1
         with:
           path: |
             ~/.cargo/.crates.toml
@@ -44,7 +42,7 @@ jobs:
           cargo install cargo2junit;
           cargo test $CARGO_OPTIONS -- -Z unstable-options --format json | tee >(cargo2junit > results.xml)
       - name: Upload test results
-        uses: EnricoMi/publish-unit-test-result-action@v1
+        uses: EnricoMi/publish-unit-test-result-action@v2
         if: always()
         with:
           check_name: Test Results
