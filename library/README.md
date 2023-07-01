@@ -11,7 +11,7 @@ the template file.
 ### Installation
 
 ```sh
-cargo install librenvy
+❯ cargo install librenvy
 ```
 
 ### Parsing files

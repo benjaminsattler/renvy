@@ -1,117 +1,137 @@
-# librenvy
+[![Crates.io](https://img.shields.io/crates/v/librenvy?label=librenvy%20%40%20crates.io)](https://crates.io/crates/librenvy)
+[![Crates.io](https://img.shields.io/crates/v/renvy?label=renvy%20%40%20crates.io)](https://crates.io/crates/renvy)
+[![GitHub](https://img.shields.io/github/license/benjaminsattler/renvy)](https://github.com/benjaminsattler/renvy/blob/master/LICENSE)
+[[![Push to master](https://github.com/benjaminsattler/renvy/actions/workflows/push-master.yml/badge.svg)](https://github.com/benjaminsattler/renvy)
 
-This crate provides easy-to-use functionality for managing settings files
-that are based on templates (e.g. `.env` and `.env.dist` files).
+# renvy
 
-This crate assumes that the files it manages are `key=value` pairs which it
-understands. It will add keys to the settings if they exist in the template file
-and optionally it'll remove keys from the settings file if they are absent from
-the template file.
+> renvy provides easy-to-use functionality for managing settings files that are based on templates
 
-### Installation
+## Library
+
+Install the library with
 ```sh
-cargo install librenvy
+❯ cargo install librenvy
 ```
 
-### Parsing files
-
-This example shows how you can easily read existing files into [`Settings`] struct's
-with the function [`deserialize()`].
-[`Settings`] are the foundation for any further processing by this crate.
-
-```rust
-// read_file returns a std::io::Result<String>
-let settings = renvy::read_file("./.env");
-assert!(settings.is_ok());
-if let Ok(settings) = settings {
-    // renvy::deserialize consumes this String and returns an instance of renvy::Settings
-    let settings: renvy::Settings = renvy::deserialize(&settings);
-    println!("Number of settings read: {}", &settings.len());
-    settings.iter().for_each(|(key, value)| {
-        println!("{:?}: {:?}\n", key, value);
-    });
-} else {
-    println!("Unable to read settings file!");
-}
-
-// you can use the same function for reading settings and template files
-let defaults = renvy::read_file("./.env.dist");
-assert!(defaults.is_ok());
-if let Ok(defaults) = defaults {
-    // we're reusing the same data structure for defaults
-    let defaults: renvy::Settings = renvy::deserialize(&defaults);
-    println!("Number of defaults read: {}", &defaults.len());
-    defaults.iter().for_each(|(key, value)| {
-        println!("{:?}: {:?}\n", key, value);
-    });
-} else {
-    println!("Unable to read defaults file!");
-}
+or by adding a corresponding entry to your `Cargo.toml`:
+```toml
+[dependencies]
+librenvy = "~0"
 ```
 
-### Updating settings based on template
+or by downloading a precompiled library file from [the GitHub Releases page](https://github.com/benjaminsattler/renvy/releases).
 
-[`merge()`] allows you to update settings based on an existing template.
-New keys in the template will be added to the settings with the default
-value given in the template.
-
+After having installed `librenvy` you'll be able to use it's functionality like this
 ```rust
-// settings file contains 1 key-value pair
-let settings = renvy::Settings::from([("domain".into(), Some("https://benjaminsattler.net".into()))]);
+use renvy;
 
-// defaults file contains 1 other key-value pair
-let defaults = renvy::Settings::from([("port".into(), Some("433".into()))]);
+let (settings, defaults) = match (
+renvy::read_file(&matches.settings),
+renvy::read_file(&matches.defaults),
+) {
+(Ok(settings), Ok(defaults)) => (settings, defaults),
+(Ok(_), Err(_)) => exit_with_error("Error reading defaults file", -1),
+(Err(_), Ok(_)) => exit_with_error("Error reading settings file", -2),
+(Err(_), Err(_)) => exit_with_error("Error reading input files", -3),
+};
 
-// merging defaults with settings will result in a new object merge::settings
-// that contains 2 key-value pairs:
-//
-// - "domain" because it was already present in `settings`
-// - "port" because it was present in defaults
-let merged = renvy::merge(settings, defaults, None);
+let (settings, defaults) = (renvy::deserialize(&settings), renvy::deserialize(&defaults));
 
-assert!(merged.get("domain").is_some());
-assert_eq!(merged.get("domain").unwrap(), &Some(String::from("https://benjaminsattler.net")));
-assert!(merged.get("port").is_some());
-assert_eq!(merged.get("port").unwrap(), &Some(String::from("433")));
-```
+let merged = renvy::merge(settings, defaults, Some(matches.cleanup));
 
-### Cleaning up extra settings
-
-You can also remove any key from the user settings that are missing from defaults
-by passing `Some(true)` to the optional third parameter of [`merge()`]:
-
-```rust
-// settings file contains 1 key-value pair
-let settings = renvy::Settings::from([("domain".into(), Some("https://benjaminsattler.net".into()))]);
-
-// defaults file contains 1 other key-value pair
-let defaults = renvy::Settings::from([("port".into(), Some("433".into()))]);
-
-// merging defaults with settings will result in a new object merge::settings
-// that contains only 1 key-value pair. The key "domain" will be removed because
-// it does not exist in the defaults:
-//
-// - "port" because it was present in defaults
-let merged = renvy::merge(settings, defaults, Some(true));
-
-assert!(merged.get("domain").is_none());
-assert!(merged.get("port").is_some());
-assert_eq!(merged.get("port").unwrap(), &Some(String::from("433")));
-```
-
-### Writing merged results back to a file
-
-The final step is to persist the merged result back into the settings file
-by invoking [`serialize()`] and [`write_file()`].
-
-```rust
-// first we're serializing the object renvy::Settings into a String
 let merged = renvy::serialize(&merged);
 
-// then we take that String and write it back into the original settings file
-let result = renvy::write_file("./.env", &merged);
-// write_file returns a std::io::Result<()>
-assert!(result.is_ok());
+renvy::write_file(&matches.settings, &merged).unwrap()
 ```
 
-License: MIT
+### More Information about the Library
+
+You can find more information about the library
+- [in the separate Readme of the library crate](https://github.com/benjaminsattler/renvy/blob/master/library/README.md)
+- at crates.io: https://crates.io/crates/librenvy
+- reading code documentation and usage examples at https://docs.rs/librenvy/ 
+
+You can also fetch the compiled library as a direct download the [GitHub repository releases page](https://github.com/benjaminsattler/renvy/releases).
+
+## Binary Executable
+
+Install the binary executable with
+
+```sh
+❯ cargo install renvy
+```
+which will put it in a place in your `$PATH` (default `~/.cargo/bin`).
+
+Alternatively you can also download a precompiled version from [the GitHub Releases page](https://github.com/benjaminsattler/renvy/releases).
+
+Verify if it launches correctly:
+```sh
+❯ renvy --help
+renvy 0.1.5           
+Benjamin Sattler <bsattler.inbox@gmail.com>
+.env file manager that merges defaults with custom settings
+
+USAGE:
+    renvy [OPTIONS] <SETTINGS> <DEFAULTS>
+
+ARGS:
+    <SETTINGS>    
+    <DEFAULTS>    
+
+OPTIONS:
+    -c, --cleanup    
+    -h, --help       Print help information
+    -V, --version    Print version information
+
+```
+Now you can invoke it like any other executable:
+```sh
+# Assuming that both files ".env" and ".env.dist" exist
+# in the current directory
+❯ renvy .env .env.dist
+```
+
+### More information about the binary executable
+You can find more information about the library
+- [in the separate Readme of the binary crate](https://github.com/benjaminsattler/renvy/blob/master/binary/README.md)
+- at crates.io: https://crates.io/crates/renvy
+- reading code documentation and usage examples at https://docs.rs/renvy/
+
+## Docker Image
+
+We also provide Docker Images, which allow you to run renvy without installation:
+```sh
+# Assuming that both files ".env" and ".env.dist" exist
+# in the current directory
+❯ docker run --rm -v "${PWD}":/opt docker.io/benjaminsattler/renvy .env .env.dist
+```
+
+### More information about Docker Images
+You can find more information about the library
+- at the Docker Hub: https://hub.docker.com/repository/docker/benjaminsattler/renvy/
+- by reading the [Dockerfile in the repository](https://github.com/benjaminsattler/renvy/blob/master/docker/Dockerfile)
+
+## License
+
+MIT License
+
+Copyright (c) [year] [fullname]
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.

@@ -11,7 +11,7 @@ the template file.
 ### Installation
 
 ```sh
-cargo install renvy
+❯ cargo install renvy
 ```
 This will install the binary renvy in your cargo installation root (default `~/.cargo/bin`).
 
@@ -35,7 +35,7 @@ OPTIONS:
 A typical invocation would look like this:
 
 ```sh
-renvy -c .env .env.dist
+❯ renvy -c .env .env.dist
 ```
 
 This will ensure that all keys in `.env.dist` exist in `.env` by adding
