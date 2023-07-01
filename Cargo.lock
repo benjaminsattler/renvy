@@ -804,7 +804,7 @@ checksum = "b4668fb0ea861c1df094127ac5f1da3409a82116a4ba74fca2e58ef927159bb3"
 
 [[package]]
 name = "librenvy"
-version = "0.1.5"
+version = "0.1.6"
 dependencies = [
  "cargo-make",
 ]
@@ -1028,7 +1028,7 @@ checksum = "436b050e76ed2903236f032a59761c1eb99e1b0aead2c257922771dab1fc8c78"
 
 [[package]]
 name = "renvy"
-version = "0.1.5"
+version = "0.1.6"
 dependencies = [
  "cargo-make",
  "clap",
