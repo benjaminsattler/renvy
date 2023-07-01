@@ -20,7 +20,7 @@ path = "src/bin/renvy.rs"
 edition = "2021"
 
 [dependencies]
-clap = { version = "3.2.5", features = ["derive"] }
+clap = { version = "~3.2.5", features = ["derive"] }
 librenvy = { version = "~0", path = "../library" }
 
 [dev-dependencies]
