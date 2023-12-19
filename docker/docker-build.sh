@@ -38,40 +38,19 @@ echo DOCKER_EXEC = "${DOCKER_EXEC}"
 echo RUST_VERSION = "${RUST_VERSION}"
 
 "${DOCKER_EXEC}" login "${DOCKER_REPO}"
-"${DOCKER_EXEC}" manifest create ${DOCKER_INSECURE} "${DOCKER_REPO}"/benjaminsattler/renvy:"${VERSION_MAJOR}"
-"${DOCKER_EXEC}" manifest create ${DOCKER_INSECURE} "${DOCKER_REPO}"/benjaminsattler/renvy:"${VERSION_MAJOR}"."${VERSION_MINOR}"
-"${DOCKER_EXEC}" manifest create ${DOCKER_INSECURE} "${DOCKER_REPO}"/benjaminsattler/renvy:"${VERSION_MAJOR}"."${VERSION_MINOR}"."${VERSION_PATCH}"
-
-for ARCH in "linux/arm64" "linux/amd64" "linux/arm/v7";
-do
-    ${DOCKER_EXEC} buildx build \
-        --platform "${ARCH}" \
-        --tag "${DOCKER_REPO}"/benjaminsattler/renvy:latest-"$("""${SCRIPT_DIR}"""/tag.sh """${ARCH}""")" \
-        --tag "${DOCKER_REPO}"/benjaminsattler/renvy:"${VERSION_MAJOR}"-"$("""${SCRIPT_DIR}"""/tag.sh """${ARCH}""")" \
-        --tag "${DOCKER_REPO}"/benjaminsattler/renvy:"${VERSION_MAJOR}"."${VERSION_MINOR}"-"$("""${SCRIPT_DIR}"""/tag.sh """${ARCH}""")" \
-        --tag "${DOCKER_REPO}"/benjaminsattler/renvy:"${VERSION_MAJOR}"."${VERSION_MINOR}"."${VERSION_PATCH}"-"$("""${SCRIPT_DIR}"""/tag.sh """${ARCH}""")" \
-        --build-arg BUILD_TIME="${BUILD_TIME}" \
-        --build-arg BUILD_USER="${BUILD_USER}" \
-        --build-arg GIT_BRANCH="${GIT_BRANCH}" \
-        --build-arg GIT_REF="${GIT_REF}" \
-        --build-arg GIT_URL="${GIT_URL}" \
-        --build-arg VERSION="${VERSION_FULL}" \
-        --build-arg RUST_VERSION="${RUST_VERSION}" \
-        --file "${REPO_ROOT}/docker/Dockerfile" \
-        --jobs=4 \
-        "${REPO_ROOT}" \
-      && "${DOCKER_EXEC}" push --format  v2s2 "${DOCKER_REPO}"/benjaminsattler/renvy:latest-"$("""${SCRIPT_DIR}"""/tag.sh """${ARCH}""")" \
-      && "${DOCKER_EXEC}" push --format  v2s2 "${DOCKER_REPO}"/benjaminsattler/renvy:"${VERSION_MAJOR}"-"$("""${SCRIPT_DIR}"""/tag.sh """${ARCH}""")" \
-      && "${DOCKER_EXEC}" push --format  v2s2 "${DOCKER_REPO}"/benjaminsattler/renvy:"${VERSION_MAJOR}"."${VERSION_MINOR}"-"$("""${SCRIPT_DIR}"""/tag.sh """${ARCH}""")" \
-      && "${DOCKER_EXEC}" push --format  v2s2 "${DOCKER_REPO}"/benjaminsattler/renvy:"${VERSION_MAJOR}"."${VERSION_MINOR}"."${VERSION_PATCH}"-"$("""${SCRIPT_DIR}"""/tag.sh """${ARCH}""")" \
-      \
-      && "${DOCKER_EXEC}" manifest create ${DOCKER_INSECURE} --amend "${DOCKER_REPO}"/benjaminsattler/renvy:latest "${DOCKER_REPO}"/benjaminsattler/renvy:latest-"$("""${SCRIPT_DIR}"""/tag.sh """${ARCH}""")" \
-      && "${DOCKER_EXEC}" manifest create ${DOCKER_INSECURE} --amend "${DOCKER_REPO}"/benjaminsattler/renvy:"${VERSION_MAJOR}" "${DOCKER_REPO}"/benjaminsattler/renvy:"${VERSION_MAJOR}"-"$("""${SCRIPT_DIR}"""/tag.sh """${ARCH}""")" \
-      && "${DOCKER_EXEC}" manifest create ${DOCKER_INSECURE} --amend "${DOCKER_REPO}"/benjaminsattler/renvy:"${VERSION_MAJOR}"."${VERSION_MINOR}" "${DOCKER_REPO}"/benjaminsattler/renvy:latest-"$("""${SCRIPT_DIR}"""/tag.sh """${ARCH}""")" \
-      && "${DOCKER_EXEC}" manifest create ${DOCKER_INSECURE} --amend "${DOCKER_REPO}"/benjaminsattler/renvy:"${VERSION_MAJOR}"."${VERSION_MINOR}"."${VERSION_PATCH}" "${DOCKER_REPO}"/benjaminsattler/renvy:"${VERSION_MAJOR}"."${VERSION_MINOR}"."${VERSION_PATCH}"-"$("""${SCRIPT_DIR}"""/tag.sh """${ARCH}""")"
-done
-
-"${DOCKER_EXEC}" manifest push --purge --format  v2s2  "${DOCKER_REPO}"/benjaminsattler/renvy:latest "${DOCKER_REPO}"/benjaminsattler/renvy:latest \
-&& "${DOCKER_EXEC}" manifest push --purge --format  v2s2 "${DOCKER_REPO}"/benjaminsattler/renvy:"${VERSION_MAJOR}" "${DOCKER_REPO}"/benjaminsattler/renvy:"${VERSION_MAJOR}" \
-&& "${DOCKER_EXEC}" manifest push --purge --format  v2s2 "${DOCKER_REPO}"/benjaminsattler/renvy:"${VERSION_MAJOR}"."${VERSION_MINOR}" "${DOCKER_REPO}"/benjaminsattler/renvy:"${VERSION_MAJOR}"."${VERSION_MINOR}" \
-&& "${DOCKER_EXEC}" manifest push --purge --format  v2s2 "${DOCKER_REPO}"/benjaminsattler/renvy:"${VERSION_MAJOR}"."${VERSION_MINOR}"."${VERSION_PATCH}" "${DOCKER_REPO}"/benjaminsattler/renvy:"${VERSION_MAJOR}"."${VERSION_MINOR}"."${VERSION_PATCH}"
+"${DOCKER_EXEC}" buildx build \
+    --platform linux/arm64,linux/amd64,linux/arm/v7 \
+    --tag "${DOCKER_REPO}"/benjaminsattler/renvy:latest \
+    --tag "${DOCKER_REPO}"/benjaminsattler/renvy:"${VERSION_MAJOR}" \
+    --tag "${DOCKER_REPO}"/benjaminsattler/renvy:"${VERSION_MAJOR}"."${VERSION_MINOR}" \
+    --tag "${DOCKER_REPO}"/benjaminsattler/renvy:"${VERSION_MAJOR}"."${VERSION_MINOR}"."${VERSION_PATCH}" \
+    --build-arg BUILD_TIME="${BUILD_TIME}" \
+    --build-arg BUILD_USER="${BUILD_USER}" \
+    --build-arg GIT_BRANCH="${GIT_BRANCH}" \
+    --build-arg GIT_REF="${GIT_REF}" \
+    --build-arg GIT_URL="${GIT_URL}" \
+    --build-arg VERSION="${VERSION_FULL}" \
+    --build-arg RUST_VERSION="${RUST_VERSION}" \
+    --file "${REPO_ROOT}/docker/Dockerfile" \
+    --push \
+    "${REPO_ROOT}"
