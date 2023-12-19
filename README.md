@@ -1,7 +1,7 @@
 [![Crates.io](https://img.shields.io/crates/v/librenvy?label=librenvy%20%40%20crates.io)](https://crates.io/crates/librenvy)
 [![Crates.io](https://img.shields.io/crates/v/renvy?label=renvy%20%40%20crates.io)](https://crates.io/crates/renvy)
 [![GitHub](https://img.shields.io/github/license/benjaminsattler/renvy)](https://github.com/benjaminsattler/renvy/blob/master/LICENSE)
-[[![Push to master](https://github.com/benjaminsattler/renvy/actions/workflows/push-master.yml/badge.svg)](https://github.com/benjaminsattler/renvy)
+[![Push to master](https://github.com/benjaminsattler/renvy/actions/workflows/push-master.yml/badge.svg)](https://github.com/benjaminsattler/renvy)
 
 # renvy
 
